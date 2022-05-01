@@ -18,7 +18,20 @@
 import sys, warnings, types, copy, string, os, time, stat
 from math import pi, sin, cos, tan
 
-from py_compile import wr_long
+
+def wr_long(f, x):
+    '''
+    "Internal; write a 32-bit int to a file in little-endian order."
+    -<https://svn.python.org/projects/python/trunk/Lib/py_compile.py>
+    License: (PYTHON SOFTWARE FOUNDATION LICENSE VERSION
+      2](https://svn.python.org/projects/python/trunk/LICENSE)
+    '''
+    f.write(chr( x        & 0xff))
+    f.write(chr((x >> 8)  & 0xff))
+    f.write(chr((x >> 16) & 0xff))
+    f.write(chr((x >> 24) & 0xff))
+
+# ^ formerly (In Python 2): from py_compile import wr_long
 
 import marshal
 # ^ formerly: from py_compile import marshal

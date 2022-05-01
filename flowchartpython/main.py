@@ -27,27 +27,27 @@ sys.argv = [sys.argv[0], "defaultKeymap=keyboard.QWERTY_MAP"]
 defaultOptions = 0
 
 # Choose an appropriate size.
-import Tkinter
-tk = Tkinter.Tk()
+import tkinter
+tk = tkinter.Tk()
 defaultSize = int(0.95*tk.winfo_screenwidth()), int(0.9*tk.winfo_screenheight())
 tk.destroy()
 del tk
 
 # Keys to bind.
 class Keys(object):
-    Left, Right, Up, Down, In, Out = [object() for i in xrange(6)]
-    Select, Cancel = [object() for i in xrange(2)]
-    Add, Subtract, Add2, Subtract2 = [object() for i in xrange(4)]
-    PanZoom, Mapping, Align, FindText = [object() for i in xrange(4)]
-    Undo, Redo, Cut, Copy, Paste, Swap = [object() for i in xrange(6)]
-    New, Save, SaveAs, Open, Run, Quit = [object() for i in xrange(6)]
+    Left, Right, Up, Down, In, Out = [object() for i in range(6)]
+    Select, Cancel = [object() for i in range(2)]
+    Add, Subtract, Add2, Subtract2 = [object() for i in range(4)]
+    PanZoom, Mapping, Align, FindText = [object() for i in range(4)]
+    Undo, Redo, Cut, Copy, Paste, Swap = [object() for i in range(6)]
+    New, Save, SaveAs, Open, Run, Quit = [object() for i in range(6)]
     Enshroud, Insert, Delete, Revert, EnterExec, Mutate = \
-                                        [object() for i in xrange(6)]
+                                        [object() for i in range(6)]
     Centre = object()
-    MouseNavigate, MousePan = [object() for i in xrange(2)]
+    MouseNavigate, MousePan = [object() for i in range(2)]
     Debug = object()
 
-import sourceFile, actor, keyboard
+from . import sourceFile, actor, keyboard
 
 # Default settings.
 class Settings(object):
@@ -131,7 +131,7 @@ class Main(object):
 
             fault[0] = fault[0] + weight
             if fault[0] >= 3:
-                print >> sys.stderr, 'Triple-faulted. Quitting.'
+                print('Triple-faulted. Quitting.', file=sys.stderr)
                 self.running = False
         else:
             fault[0] = max(fault[0] - weight, 0)
@@ -148,7 +148,7 @@ def main():
     # Translate settings.
     settingsString = ' '.join(sys.argv[1:])
     for k,v in eval('dict(%s)' % settingsString, \
-                    {'keyboard': keyboard}).iteritems():
+                    {'keyboard': keyboard}).items():
         setattr(Settings, k, v)
 
     keyboard.KEY_MAPPING = Settings.defaultKeymap

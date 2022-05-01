@@ -144,8 +144,8 @@ class Mapping(object):
     def isBroken(self):
         'error-checker.'
         if len(self.connections) < self.numInputs:
-            print 'Mapping numInputs: %d, len connections: %d' % \
-                  (self.numInputs, len(self.connections))
+            print('Mapping numInputs: %d, len connections: %d' % \
+                  (self.numInputs, len(self.connections)))
             return True
         return False
 
@@ -228,12 +228,12 @@ class InterBlockMapping(Mapping):
         if super(InterBlockMapping, self).isBroken():
             return True
         if self.prevBlock.numOutputs != self.numInputs:
-            print '  ib-map in: %d, prev out: %d' % (self.numInputs, \
-                                                     self.prevBlock.numOutputs)
+            print('  ib-map in: %d, prev out: %d' % (self.numInputs, \
+                                                     self.prevBlock.numOutputs))
             return True
         if self.nextBlock.numInputs != self.numOutputs:
-            print '  ib-map out: %d, next in: %d' % (self.numOutputs, \
-                                                     self.nextBlock.numInputs)
+            print('  ib-map out: %d, next in: %d' % (self.numOutputs, \
+                                                     self.nextBlock.numInputs))
             return True
         return False
 
@@ -279,8 +279,8 @@ class CollapseMapping(Mapping):
         if super(CollapseMapping, self).isBroken():
             return True
         if self.prevBlock.numOutputs != self.numInputs:
-            print 'CollapseMapping in: %d, prev out: %d' % \
-                  (self.numInputs, self.prevBlock.numOutputs)
+            print('CollapseMapping in: %d, prev out: %d' % \
+                  (self.numInputs, self.prevBlock.numOutputs))
             return True
         return False
 
@@ -304,12 +304,12 @@ class LoopMapping(Mapping):
 
     def isBroken(self):
         if self.numOutputs != self.nextBlock.numInputs:
-            print 'LoopMapping outputs: %d, block inputs: %d' % \
-                  (self.numOutputs, self.nextBlock.numInputs)
+            print('LoopMapping outputs: %d, block inputs: %d' % \
+                  (self.numOutputs, self.nextBlock.numInputs))
             return True
         if self.numInputs <= self.nextBlock.numOutputs:
-            print 'LoopMapping inputs: %d, block outputs: %d' % \
-                  (self.numInputs, self.nextBlock.numOutputs)
+            print('LoopMapping inputs: %d, block outputs: %d' % \
+                  (self.numInputs, self.nextBlock.numOutputs))
             return True
         if super(LoopMapping, self).isBroken():
             return True
@@ -355,7 +355,7 @@ class Block(object):
     def isBroken(self):
         'error-checker'
         if self.parent and self not in self.parent:
-            print 'Block not in parent.'
+            print('Block not in parent.')
             return True
         return False
 
@@ -892,7 +892,7 @@ class Block(object):
 
         for i in range(0, len(self.lineNumbers), 2):
             small, big = self.lineNumbers[i:i+2]
-            if lineNumber in xrange(small, big):
+            if lineNumber in range(small, big):
                 return self
         return None
 
@@ -958,7 +958,7 @@ class Block(object):
         or this definition will be recursive.'''
 
         if child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         # Creata a new long block.
         longBlock = LongBlock()
@@ -1017,7 +1017,7 @@ class Block(object):
         This routine MUST be overridden by WideBlock.'''
 
         if child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         # Create a new wide block.
         wBlock = WideBlock()
@@ -1052,7 +1052,7 @@ class Block(object):
         Returns the enshrouding block.
         '''
         if not issubclass(blockType, Block):
-            raise TypeError, 'specified block type must be a subclass of Block'
+            raise TypeError('specified block type must be a subclass of Block')
 
         newBlock = blockType()
         self.revert().mutate(newBlock)
@@ -1150,7 +1150,7 @@ class MultiChildBlock(Block):
             return True
         for b in self.blocks:
             if b.parent is not self:
-                print 'MultiChildBlock has child who disowns it:', b
+                print('MultiChildBlock has child who disowns it:', b)
                 return True
         return False
 
@@ -1408,7 +1408,7 @@ class IfBlock(Block):
             # Save the constants.
             badConsts.extend(c.co_consts)
         except:
-            raise EPrepBlockError, (self, 'invalid if condition')
+            raise EPrepBlockError(self, 'invalid if condition')
 
         return badConsts
 
@@ -1731,7 +1731,7 @@ class ExecBlock(Block):
             codeObj = newParser.compile()
         except:
             val = sys.exc_info()[1]
-            raise ECompileBlockError, (self, (str(val), val))
+            raise ECompileBlockError(self, (str(val), val))
 
         # Add the block into the program.
         parser.addLine('exec %s' % parser.newConst(codeObj))
@@ -1790,13 +1790,13 @@ class DefBlock(OneChildBlock):
         if super(DefBlock, self).isBroken():
             return True
         if self.numInputs != 1 or self.numOutputs != 1:
-            print 'DefBlock in: %d, out: %d' % (self.numInputs, self.numOutputs)
+            print('DefBlock in: %d, out: %d' % (self.numInputs, self.numOutputs))
             return True
         if self.map.prevBlock is not self.child:
-            print 'DefBlock map prev is not child.'
+            print('DefBlock map prev is not child.')
             return True
         if self.map.isBroken():
-            print 'DefBlock map broken.'
+            print('DefBlock map broken.')
             return True
         return False
 
@@ -1881,7 +1881,7 @@ class DefBlock(OneChildBlock):
         try:
             compile('def %s(): pass\n' % self.fnName, '', 'exec')
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid function name')
+            raise EPrepBlockError(self, 'invalid function name')
 
         # Check validity of parameters.
         try:
@@ -1889,7 +1889,7 @@ class DefBlock(OneChildBlock):
             # Save constants.
             badConsts.extend(code.co_consts)
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid parameter list')
+            raise EPrepBlockError(self, 'invalid parameter list')
 
         # Check validity of output expressions.
         for exp in self.returnExpressions:
@@ -1899,7 +1899,7 @@ class DefBlock(OneChildBlock):
                     # Save constants.
                     badConsts.extend(code.co_consts)
                 except SyntaxError:
-                    raise EPrepBlockError, (self, 'invalid return expression')
+                    raise EPrepBlockError(self, 'invalid return expression')
 
         # Don't prepBlock the child until we need its badConsts
 
@@ -2173,13 +2173,13 @@ class ClassBlock(OneChildBlock):
         try:
             compile('class %s(object): pass\n' % self.clsName, '', 'exec')
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid class name')
+            raise EPrepBlockError(self, 'invalid class name')
 
         # Check validity of parameters.
         try:
             compile('class foo(%s): pass\n' % self.inherit, '', 'exec')
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid inheritance list')
+            raise EPrepBlockError(self, 'invalid inheritance list')
 
         # Don't prepBlock the child until we need its badConsts
 
@@ -2327,23 +2327,23 @@ class ProcedureBlock(OneChildBlock):
         if super(ProcedureBlock, self).isBroken():
             return True
         if self.numInputs != 1 or self.numOutputs != 1:
-            print 'ProcedureBlock in: %d, out: %d' % (self.numInputs, \
-                                                      self.numOutputs)
+            print('ProcedureBlock in: %d, out: %d' % (self.numInputs, \
+                                                      self.numOutputs))
             return True
         if self.map.numOutputs != len(self.routesOut):
-            print 'ProcedureBlock map out: %d, routes out: %s' % \
-                  (self.map.numOutputs, str(self.routesOut))
+            print('ProcedureBlock map out: %d, routes out: %s' % \
+                  (self.map.numOutputs, str(self.routesOut)))
             return True
         if self.map.numInputs != self.child.numOutputs:
-            print 'ProcedureBlock map in: %d, child out: %d' % \
-                  (self.map.numInputs, self.child.numOutputs)
+            print('ProcedureBlock map in: %d, child out: %d' % \
+                  (self.map.numInputs, self.child.numOutputs))
             return True
         if self.child.numInputs != len(self.routesIn):
-            print 'ProcedureBlock child in: %d, routes in: %s' % \
-                  (self.child.numInputs, str(self.routesIn))
+            print('ProcedureBlock child in: %d, routes in: %s' % \
+                  (self.child.numInputs, str(self.routesIn)))
             return True
         if self.map.isBroken():
-            print 'ProcedureBlock map broken'
+            print('ProcedureBlock map broken')
             return True
         return False
 
@@ -2417,7 +2417,7 @@ class ProcedureBlock(OneChildBlock):
         try:
             compile('def %s(): pass\n' % self.prName, '', 'exec')
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid procedure name')
+            raise EPrepBlockError(self, 'invalid procedure name')
 
         # Check validity of parameters.
         try:
@@ -2425,7 +2425,7 @@ class ProcedureBlock(OneChildBlock):
             # Save constants.
             badConsts.extend(code.co_consts)
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid parameter list')
+            raise EPrepBlockError(self, 'invalid parameter list')
 
         # If it's in a class, check that it's got 1 non-keyword argument.
         if isinstance(self.parent, ClassBlock):
@@ -2437,13 +2437,13 @@ class ProcedureBlock(OneChildBlock):
                 arg1 = self.params[:commaPos]
 
             if arg1.find('=') >= 0:
-                raise EPrepBlockError, (self, 'needs at least one non-keyword argument')
+                raise EPrepBlockError(self, 'needs at least one non-keyword argument')
 
         # Check validity of routesIn and routesOut.
         error = Identifier.preRouteNamesError(self.routesOut)
         error = error or Identifier.postRouteNamesError(self.routesIn)
         if error:
-            raise EPrepBlockError, (self, error)
+            raise EPrepBlockError(self, error)
 
         # Don't prepBlock the child until we need its badConsts
 
@@ -2740,12 +2740,12 @@ class ProcCallBlock(Block):
         if super(ProcCallBlock, self).isBroken():
             return True
         if self.numInputs != len(self.routesIn):
-            print 'ProcCall inputs: %d, len(routesIn): %d' % (self.numInputs, \
-                                                        len(self.routesIn))
+            print('ProcCall inputs: %d, len(routesIn): %d' % (self.numInputs, \
+                                                        len(self.routesIn)))
             return True
         if self.numOutputs != len(self.routesOut):
-            print 'ProcCall outputs: %d, len(routesOut): %d' % \
-                  (self.numOutputs, len(self.routesOut))
+            print('ProcCall outputs: %d, len(routesOut): %d' % \
+                  (self.numOutputs, len(self.routesOut)))
             return True
         return False
 
@@ -2797,7 +2797,7 @@ class ProcCallBlock(Block):
         error = Identifier.preRouteNamesError(self.routesIn)
         error = error or Identifier.postRouteNamesError(self.routesOut)
         if error:
-            raise EPrepBlockError, (self, error)
+            raise EPrepBlockError(self, error)
 
         # Check validity of name.
         try:
@@ -2805,14 +2805,14 @@ class ProcCallBlock(Block):
             # Save the bad constants.
             badConsts.extend(c.co_consts)
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid expression')
+            raise EPrepBlockError(self, 'invalid expression')
 
         # Check validity of parameters.
         try:
             code = compile('foo(%s)\n' % self.params, '', 'eval')
             badConsts.extend(code.co_consts)
         except SyntaxError:
-            raise EPrepBlockError, (self, 'invalid parameter expression')
+            raise EPrepBlockError(self, 'invalid parameter expression')
 
         # Label the strands which come to this point.
         for i in range(self.numInputs):
@@ -3132,9 +3132,9 @@ class TryBlock(OneChildBlock):
 
         # Check validity of names.
         if not Identifier.valid(self.excVar):
-            raise EPrepBlockError, (self, 'invalid identifier: %s' % self.excVar)
+            raise EPrepBlockError(self, 'invalid identifier: %s' % self.excVar)
         if self.excTrace != '' and not Identifier.valid(self.excTrace):
-            raise EPrepBlockError, (self, 'invalid identifier: %s' % self.excTrace)
+            raise EPrepBlockError(self, 'invalid identifier: %s' % self.excTrace)
 
         # Call prepBlock of children.
         badConsts.extend(self.child.prepBlock())
@@ -3238,7 +3238,7 @@ class TryBlock(OneChildBlock):
         '''setExcVar(varname) - sets the name of the variable which this
         try block will put an error in if it is raised.'''
         if not isinstance(varname, str):
-            raise TypeError, 'varname must be a string'
+            raise TypeError('varname must be a string')
 
         self.excVar = varname
         self.g_modified = True
@@ -3268,28 +3268,28 @@ class LongBlock(MultiChildBlock):
         if super(LongBlock, self).isBroken():
             return True
         if len(self.maps) != len(self.blocks) - 1:
-            print 'LongBlock blocks: %d, maps: %d' % (len(self.blocks),
-                                                      len(self.maps))
+            print('LongBlock blocks: %d, maps: %d' % (len(self.blocks),
+                                                      len(self.maps)))
             return True
         for i in range(len(self.maps)):
             m = self.maps[i]
             if m.prevBlock != self.blocks[i]:
-                print 'LongBlock\'s map prev points to wrong thing.'
+                print('LongBlock\'s map prev points to wrong thing.')
                 return True
             if m.nextBlock != self.blocks[i+1]:
-                print 'LongBlock\'s map next points to wrong block:', \
-                      str(m.nextBlock), str(self.blocks[i+1])
+                print('LongBlock\'s map next points to wrong block:', \
+                      str(m.nextBlock), str(self.blocks[i+1]))
                 return True
             if m.isBroken():
-                print 'LongBlock\'s mapping is broken.'
+                print('LongBlock\'s mapping is broken.')
                 return True
         if self.numInputs != self.blocks[0].numInputs:
-            print 'LongBlock\'s in: %d, first block in: %d' % \
-                  (self.numInputs, self.blocks[0].numInputs)
+            print('LongBlock\'s in: %d, first block in: %d' % \
+                  (self.numInputs, self.blocks[0].numInputs))
             return True
         if self.numOutputs != self.blocks[-1].numOutputs:
-            print 'LongBlock\'s out: %d, last block out: %d' % \
-                  (self.numOutputs, self.blocks[-1].numOutputs)
+            print('LongBlock\'s out: %d, last block out: %d' % \
+                  (self.numOutputs, self.blocks[-1].numOutputs))
             return True
         return False
 
@@ -3621,7 +3621,7 @@ class LongBlock(MultiChildBlock):
 
             if len(rIn) == 0:
                 ptOut = []
-                raise Exception, 'Mapping can\'t have zero outputs.'
+                raise Exception('Mapping can\'t have zero outputs.')
             else:
                 spacings = [rIn[0][1] + bHeight] + \
                            [rIn[j+1][1] - rIn[j][1] for j in range(len(rIn)-1)] \
@@ -3727,7 +3727,7 @@ class LongBlock(MultiChildBlock):
         '''
 
         if child is not None and child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         result = self.insertChildSeq_internal(child, after, blockToAdd)
         assert not self.isBroken()
@@ -3749,7 +3749,7 @@ class LongBlock(MultiChildBlock):
         create a new PassBlock to go in one half.'''
 
         if child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         i = self.blocks.index(child)
         i = (after and i+1) or i
@@ -3869,7 +3869,7 @@ class LongBlock(MultiChildBlock):
         replaced with its child.'''
 
         if len(self.blocks) > 1:
-            raise ValueError, 'block must have only one child'
+            raise ValueError('block must have only one child')
 
         if not self.parent:
             self.blocks[0].delete()
@@ -3907,13 +3907,13 @@ class LongBlock(MultiChildBlock):
         '''
         # Error check.
         if len(self.blocks) != 2:
-            raise ValueError, 'block should have exactly two children'
+            raise ValueError('block should have exactly two children')
         if not isinstance(self.blocks[0], WideBlock):
-            raise TypeError, 'first child must be a WideBlock'
+            raise TypeError('first child must be a WideBlock')
         if not isinstance(self.blocks[1], WideBlock):
-            raise TypeError, 'second child should be a WideBlock'
+            raise TypeError('second child should be a WideBlock')
         if len(self.blocks[0].blocks) != len(self.blocks[1].blocks):
-            raise ValueError, 'both child blocks must have the same number of children'
+            raise ValueError('both child blocks must have the same number of children')
 
         # Save my mapping.
         m = self.maps[0].connections
@@ -3974,40 +3974,40 @@ class WideBlock(MultiChildBlock):
         if super(WideBlock, self).isBroken():
             return True
         if self.numInputs != sum(i.numInputs for i in self.blocks):
-            print 'WideBlock inputs: %d, child inputs: %s' % \
-                  (self.numInputs, str([i.numInputs for i in self.blocks]))
+            print('WideBlock inputs: %d, child inputs: %s' % \
+                  (self.numInputs, str([i.numInputs for i in self.blocks])))
             return True
         if self.numOutputs != sum(i.numOutputs for i in self.blocks):
-            print 'WideBlock outputs: %d, child outputs: %s' % \
-                  (self.numOutputs, str([i.numOutputs for i in self.blocks]))
+            print('WideBlock outputs: %d, child outputs: %s' % \
+                  (self.numOutputs, str([i.numOutputs for i in self.blocks])))
             return True
         if len(self.inputTally) != len(self.blocks) + 1:
-            print 'WideBlock input tally: %d, blocks: %d' % (len(self.inputTally),
-                                                             len(self.blocks))
+            print('WideBlock input tally: %d, blocks: %d' % (len(self.inputTally),
+                                                             len(self.blocks)))
             return True
         if len(self.outputTally) != len(self.blocks) + 1:
-            print 'WideBlock output tally: %d, blocks: %d' % (len(self.outputTally),
-                                                              len(self.blocks))
+            print('WideBlock output tally: %d, blocks: %d' % (len(self.outputTally),
+                                                              len(self.blocks)))
             return True
         if self.outputTally[0] != 0:
-            print 'WideBlock outputTally[0] =', self.outputTally[0]
+            print('WideBlock outputTally[0] =', self.outputTally[0])
             return True
         n = 0
         for i in range(len(self.blocks)):
             n = n + self.blocks[i].numOutputs
             if self.outputTally[i+1] != n:
-                print 'WideBlock outputTally[%d] = %d, should be %d' % \
-                      (i+1, self.outputTally[i+1], n)
+                print('WideBlock outputTally[%d] = %d, should be %d' % \
+                      (i+1, self.outputTally[i+1], n))
                 return True
         if self.inputTally[0] != 0:
-            print 'WideBlock inputTally[0] =', self.inputTally[0]
+            print('WideBlock inputTally[0] =', self.inputTally[0])
             return True
         n = 0
         for i in range(len(self.blocks)):
             n = n + self.blocks[i].numInputs
             if self.inputTally[i+1] != n:
-                print 'WideBlock inputTally[%d] = %d, should be %d' % \
-                      (i+1, self.inputTally[i+1], n)
+                print('WideBlock inputTally[%d] = %d, should be %d' % \
+                      (i+1, self.inputTally[i+1], n))
                 return True
         return False
 
@@ -4250,7 +4250,7 @@ class WideBlock(MultiChildBlock):
                 c = ' __strand__ = %s' % parser.newConst(repr(lbl))
         else:
             # More than one input to this block.
-            xr = xrange(self.inputTally[i], self.inputTally[i+1])
+            xr = range(self.inputTally[i], self.inputTally[i+1])
             b = 'in %d' % tuple(xr)
 
             # Check for no labelling.
@@ -4407,7 +4407,7 @@ class WideBlock(MultiChildBlock):
         '''
 
         if child is not None and child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         result = self.insertParallelChild_internal(child,below,newChild)
 
@@ -4425,7 +4425,7 @@ class WideBlock(MultiChildBlock):
         '''
 
         if child not in self:
-            raise KeyError, 'child does not belong to this block'
+            raise KeyError('child does not belong to this block')
 
         i = self.blocks.index(child)
         i = (below and i+1) or i
@@ -4512,7 +4512,7 @@ class WideBlock(MultiChildBlock):
         replaced with its child.'''
 
         if len(self.blocks) > 1:
-            raise ValueError, 'block must have only one child'
+            raise ValueError('block must have only one child')
 
         if not self.parent:
             self.blocks[0].delete()
@@ -4548,9 +4548,9 @@ class WideBlock(MultiChildBlock):
         # Error check.
         for b in self.blocks:
             if not isinstance(b, LongBlock):
-                raise TypeError, 'every child must be a LongBlock instance'
+                raise TypeError('every child must be a LongBlock instance')
             if len(b.blocks) != 2:
-                raise ValueError, 'LongBlocks must have exactly two children'
+                raise ValueError('LongBlocks must have exactly two children')
 
         # Create the new long block and give it two wide blocks.
         result = LongBlock()
@@ -4639,7 +4639,7 @@ class MasterBlock(OneChildBlock):
     def reconstitute(essence):
         magicNum, lineNums, comment, a, b, timestamp = essence
         if magicNum != fcpyMagicNumber:
-            raise ValueError, 'invalid file format'
+            raise ValueError('invalid file format')
         result = MasterBlock(comment=comment[:])
         result.child.mutate(approvedBlockTypes[a].reconstitute(b))
         result.timestamp = timestamp
@@ -5229,15 +5229,15 @@ class ForBlock(LoopBlock):
         if Block.isBroken(self):
             return True
         if self.map.isBroken():
-            print 'ForBlock map is broken.'
+            print('ForBlock map is broken.')
             return True
         if self.map.numInputs != self.child.numOutputs + self.numInputs:
-            print 'ForBlock map inputs: %d, child outputs: %d, my inputs: %d' % \
-                  (self.map.numInputs, self.child.numOutputs, self.numInputs)
+            print('ForBlock map inputs: %d, child outputs: %d, my inputs: %d' % \
+                  (self.map.numInputs, self.child.numOutputs, self.numInputs))
             return True
         if self.numOutputs != len(self.escapes) + 1:
-            print 'ForBlock outputs: %d, num escapes: %d' % (self.numOutputs,
-                                                        len(self.escapes))
+            print('ForBlock outputs: %d, num escapes: %d' % (self.numOutputs,
+                                                        len(self.escapes)))
             return True
         return False
 
@@ -5301,8 +5301,8 @@ class ForBlock(LoopBlock):
                                                      self.inExpression),
                            '', 'exec')
             badConsts.append(code.co_consts)
-        except SyntaxError, err:
-            raise EPrepBlockError, (self, err.msg)
+        except SyntaxError as err:
+            raise EPrepBlockError(self, err.msg)
 
         # return bad consts.
         return badConsts
@@ -5398,7 +5398,7 @@ class EscapeBlock(Block):
 
         # Check for bounding loop.
         if not self.nextLoop:
-            raise EPrepBlockError, (self, 'escape must be within loop')
+            raise EPrepBlockError(self, 'escape must be within loop')
 
         return badConsts
 
@@ -5646,7 +5646,7 @@ class FlowchartCode(object):
         else:
             # If it's already bound we can't compile it.
             if block.parent is not None:
-                raise ValueError, "can't compile bound Block"
+                raise ValueError("can't compile bound Block")
 
             # Create a MasterBlock to house it.
             newBlock = MasterBlock(filename='<flowchart>')
@@ -5736,7 +5736,7 @@ class FlowchartCode(object):
         '''Updates the line numbers in the blocks based on the compilation
         that's just occurred.'''
 
-        for b, chunks in self.blockLines.iteritems():
+        for b, chunks in self.blockLines.items():
             lines = []
             # Add the things.
             for p,l in [(p, l) for add, p, l in chunks if add]:
@@ -5783,7 +5783,7 @@ class FlowchartCode(object):
         if locals == None:
             locals = globals
 
-        exec self.codeObject in globals, locals
+        exec(self.codeObject, globals, locals)
 
     def savePyc(self, cfile, timestamp):
         """Save a Byte-compiled Python code object to a .pyc or .pyo file.
@@ -5816,7 +5816,7 @@ class FlowchartCode(object):
 
         fc = open(cfile, 'wb')
         fc.write('\0\0\0\0')
-        wr_long(fc, long(timestamp))
+        wr_long(fc, int(timestamp))
         marshal.dump(codeobject, fc)
         fc.flush()
         fc.seek(0, 0)
@@ -6002,7 +6002,7 @@ class BlockParser(object):
         result = self.compile_internal()
 
         # Create new constants list.
-        varsToSub = self.substitutions.keys()
+        varsToSub = list(self.substitutions.keys())
         nameBindings = copy.deepcopy(self.nameBindings)
         consts = []
         for i in result.co_consts:
@@ -6034,12 +6034,12 @@ class BlockParser(object):
 
         # Check for any non-substituted consts or names.
         if len(varsToSub) > 0:
-            for l in self.lines: print l
-            print 'unsubstituted:', varsToSub
-            raise Exception, 'Unsubstituted const!'
+            for l in self.lines: print(l)
+            print('unsubstituted:', varsToSub)
+            raise Exception('Unsubstituted const!')
         if len(nameBindings) > 0:
-            print self.lines
-            raise Exception, 'Unsubstituted code object!'
+            print(self.lines)
+            raise Exception('Unsubstituted code object!')
 
         if fnName == None:
             fnName = result.co_name
@@ -6097,7 +6097,7 @@ def test1():
     a.child.blocks[1].child.returnExpressions[0] = '7'
 
     namespace={}
-    exec compileBlock(a) in namespace
+    exec(compileBlock(a), namespace)
 
 def test2():
     a = MasterBlock()
@@ -6115,10 +6115,10 @@ def test2():
     b.setReturnExpression(1, "'big'")
     b.map.connections[1] = 0
 
-    print b.map.connections
+    print(b.map.connections)
 
     namespace={}
-    exec compileBlock(a) in namespace
+    exec(compileBlock(a), namespace)
 
 def test3():
     a = MasterBlock()
@@ -6150,26 +6150,26 @@ def test3():
 
     h.insertBlockSeq().mutate(l)
     i.insertBlockSeq().mutate(m)
-    print '**C**'
+    print('**C**')
 
     k.blocks[0].mutate(g[0])
     for z in g[1:]:
         k.insertParallelChild(None, False, z)
-    print '**B**'
+    print('**B**')
 
     a.child.mutate(b)
     b.parent.insertChildSeq(b, True, j)
-    print k.numInputs
+    print(k.numInputs)
     j.parent.insertChildSeq(j, True, k)
-    print k.numInputs
-    print '**A**'
+    print(k.numInputs)
+    print('**A**')
 
 
-    print a.child.maps[0].connections, a.child.maps[1].connections
+    print(a.child.maps[0].connections, a.child.maps[1].connections)
 
     namespace={}
     r = compileBlock(a)
-    exec r in namespace
+    exec(r, namespace)
     return a,r
 
 def test4():
@@ -6185,25 +6185,25 @@ def test4():
     assert c.nextLoop is b
     assert b.numOutputs == 1
     assert not b.isBroken()
-    print b.map.numOutputs, b.map.connections
+    print(b.map.numOutputs, b.map.connections)
 
     d = EscapeBlock()
-    print ' === 1A ==='
+    print(' === 1A ===')
     c.insertBlockSeq().mutate(d)
     d.insertBlockPar()
 
     assert d.nextLoop is b
-    print b.numOutputs
+    print(b.numOutputs)
     assert b.numOutputs == 2
     assert not b.isBroken()
 
-    print ' === 1B ==='
+    print(' === 1B ===')
 
     e = IfBlock('input("Go 3? ")')
     assert b.numOutputs == 2
     assert not b.isBroken()
     x=d.parent.insertBlockSeq()
-    print b.numOutputs
+    print(b.numOutputs)
     assert b.numOutputs == 2
     assert not b.isBroken()
     x.mutate(e)
@@ -6211,17 +6211,17 @@ def test4():
     assert e.parent is c.parent
     assert e.nextLoop is b
     assert not b.isBroken()
-    print ' === 1C ==='
+    print(' === 1C ===')
     f = EscapeBlock()
     assert b.numOutputs == 2
     assert not b.isBroken()
-    print ' === 1D ==='
+    print(' === 1D ===')
     e.insertBlockSeq().mutate(f)
     f.insertBlockPar()
     assert f.nextLoop is b
     assert b.numOutputs == 3
     assert not b.isBroken()
-    print ' === 1E ==='
+    print(' === 1E ===')
 
     g = ExecBlock(['print i'])
     f.parent.insertBlockSeq().mutate(g)
@@ -6232,20 +6232,20 @@ def test4():
     h = ExecBlock(['print 1'])
     i = ExecBlock(['print 2'])
     j = ExecBlock(['print 3'])
-    print ' === 2A ==='
+    print(' === 2A ===')
     b.insertBlockSeq().mutate(h)
-    print ' === 2B ==='
+    print(' === 2B ===')
     assert b.parent is h.parent
     h.insertBlockPar().mutate(i)
-    print ' === 3A ==='
+    print(' === 3A ===')
     i.insertBlockPar().mutate(j)
-    print ' === 3B ==='
+    print(' === 3B ===')
 
     assert h.parent is i.parent is j.parent
 
-    print b.parent.maps[0].numOutputs, h.parent.numInputs
+    print(b.parent.maps[0].numOutputs, h.parent.numInputs)
     assert b.parent.maps[0].numOutputs == 3
-    print b.numOutputs, b.parent.maps[0].numInputs
+    print(b.numOutputs, b.parent.maps[0].numInputs)
     assert b.parent.maps[0].numInputs == 3
     b.parent.maps[0].connections = [0,1,2]
 
@@ -6265,14 +6265,14 @@ def test5():
     e = IfBlock('input("Exit? ")')
     d.child.mutate(e)
     assert d.child is e
-    print ' === A ==='
+    print(' === A ===')
     e2 = e.insertBlockSeq().mutate(WideBlock)
     e2.insertParallelChild(None).mutate(EscapeBlock)
     e.parent.maps[0].connections = [0, 1]
 
-    print ' === B ==='
+    print(' === B ===')
     c.insertBlockPar().mutate(ExecBlock(['print 3']))
-    print ' === C ==='
+    print(' === C ===')
     c.insertBlockPar().mutate(ExecBlock(['print 2']))
 
     b.setNumEntries(2)
@@ -6353,10 +6353,10 @@ def test8():
 
     return a, t
 
-import painter
-from painter import RectType
+from . import painter
+from .painter import RectType
 
 
 if __name__ == '__main__':
-    import main
+    from . import main
     mb = main.main()

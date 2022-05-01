@@ -20,7 +20,7 @@ import time
 
 import pygame
 import pygame.locals as pgl
-import keyboard
+from . import keyboard
 
 bkgColour = (255, 255, 255)
 bdrColour = (224, 224, 224)
@@ -1174,9 +1174,9 @@ class MapFeature(InteractiveFeature):
 
     def __init__(self, block, ht, inputs, outputs, mapping):
         if len(inputs) != mapping.numInputs:
-            raise ValueError, 'mapping and inputs have different sizes'
+            raise ValueError('mapping and inputs have different sizes')
         elif len(outputs) != mapping.numOutputs:
-            raise ValueError, 'mapping and outputs have different sizes'
+            raise ValueError('mapping and outputs have different sizes')
 
         self.block = block
         self.inputs = inputs
@@ -2705,9 +2705,9 @@ class MultilineText(InteractiveFeature):
         self.selLines = len(self.lines) - 1
         self.selLength = len(self.lines[-1])
 
-import sourceFile
-from actor import SysMode
+from . import sourceFile
+from .actor import SysMode
 
 if __name__ == '__main__':
-    import main
+    from . import main
     mb = main.main()

@@ -15,14 +15,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-import main, painter, sourceFile, keyboard
+from . import main, painter, sourceFile, keyboard
 
 import sys
 import time
 import pygame
 import pygame.locals as pgl
 
-import Tkinter, tkFileDialog, Dialog
+import tkinter, tkinter.filedialog, tkinter.dialog
 
 menuColour = (192, 192, 255)
 textColour = (0, 0, 0)
@@ -516,9 +516,9 @@ class Actor(object):
 
         myTk = tk == None
         if myTk:
-            tk = Tkinter.Tk()
+            tk = tkinter.Tk()
             tk.withdraw()
-        result = Dialog.Dialog(tk,
+        result = tkinter.dialog.Dialog(tk,
                     title = 'Question', \
                     text = 'File has been modified. Save it now?', \
                     default = 2, \
@@ -535,10 +535,10 @@ class Actor(object):
     def saveAs(self, tk=None):
         myTk = tk == None
         if myTk:
-            tk = Tkinter.Tk()
+            tk = tkinter.Tk()
             tk.withdraw()
 
-        filename = tkFileDialog.asksaveasfilename(parent=tk, \
+        filename = tkinter.filedialog.asksaveasfilename(parent=tk, \
                     defaultextension='fcpy', \
                     filetypes=[('Flowchart Python program', '*.fcpy')])
 
@@ -553,12 +553,12 @@ class Actor(object):
                                              button=1))
 
     def load(self):
-        tk = Tkinter.Tk()
+        tk = tkinter.Tk()
         tk.withdraw()
         if not self.confirmDestroy(tk):
             tk.destroy()
             return
-        filename = tkFileDialog.askopenfilename(parent=tk, \
+        filename = tkinter.filedialog.askopenfilename(parent=tk, \
                         defaultextension='fcpy', \
                         filetypes=[('Flowchart Python program', '*.fcpy')])
         tk.destroy()
@@ -576,37 +576,37 @@ class Actor(object):
 
     def run(self):
         # TODO: Pretty this up.
-        print '================================= RUNNING ================================'
+        print('================================= RUNNING ================================')
         try:
             t = sourceFile.compileBlock(self.masterBlock)
         except (sourceFile.EPrepBlockError, sourceFile.ECompileBlockError):
             args = sys.exc_info()[1].args
             a, b = args
-            print >> sys.stderr, b
+            print(b, file=sys.stderr)
             self.setSelection(a)
             return
 
         try:
-            exec t in {}
+            exec(t, {})
         except:
             tp, error, traceback = sys.exc_info()
             tb = traceback
-            print >> sys.stderr, 'Traceback (most recent call last):'
+            print('Traceback (most recent call last):', file=sys.stderr)
             while tb:
                 lineNum = tb.tb_lineno
-                print >> sys.stderr, '  File "%s", line %s in %s' % \
+                print('  File "%s", line %s in %s' % \
                   (tb.tb_frame.f_code.co_filename, lineNum, \
-                   tb.tb_frame.f_code.co_name)
+                   tb.tb_frame.f_code.co_name), file=sys.stderr)
                 tb = tb.tb_next
-            print >> sys.stderr, error
+            print(error, file=sys.stderr)
 
             block = self.masterBlock.getBlockFromLine(lineNum)
             if block:
                 self.setSelection(block)
             del traceback, tb
 
-        print '================================ FINISHED ================================'
-        print
+        print('================================ FINISHED ================================')
+        print()
 
     def quit(self):
         self.setMode(SysMode.Standard)
@@ -875,7 +875,7 @@ class Actor(object):
         try:
             self.selIndex = self.selFeatures.index(txt)
         except ValueError:
-            print >> sys.stderr, 'Text element not in list.'
+            print('Text element not in list.', file=sys.stderr)
             self.selIndex = 0
 
         self.setMode(SysMode.Text)

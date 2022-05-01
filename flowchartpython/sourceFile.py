@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-import sys, warnings, new, copy, string, os, time, stat
+import sys, warnings, types, copy, string, os, time, stat
 from math import pi, sin, cos, tan
 
 from py_compile import marshal, MAGIC, wr_long
@@ -6017,7 +6017,7 @@ class BlockParser(object):
                     pass
                 i = j
             except KeyError:
-                if i.__class__ == new.code:
+                if i.__class__ == types.CodeType:
                     # Check for name substitutions.
                     try:
                         # Perform substitution.
@@ -6044,7 +6044,7 @@ class BlockParser(object):
         if fnName == None:
             fnName = result.co_name
         # Create and return the code object.
-        result= new.code(result.co_argcount,
+        result= types.CodeType(result.co_argcount,
                         result.co_nlocals,
                         result.co_stacksize,
                         result.co_flags,
@@ -6084,7 +6084,7 @@ class DefBlockParser(BlockParser):
         codeObj = compile('\n'.join(self.lines), '', 'exec')
 
         for i in codeObj.co_consts:
-            if i.__class__ == new.code:
+            if i.__class__ == types.CodeType:
                 return i
 
 def test1():

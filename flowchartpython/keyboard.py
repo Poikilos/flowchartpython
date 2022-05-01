@@ -111,12 +111,13 @@ Ampersand, Asterisk, At, Backquote, Backslash, Caret, Colon, Comma, Dollar, \
     Underscore = [object() for i in range(33)]
 
 Backspace, Break, Capslock, Delete, Down, End, Escape, Euro, F1, F2, F3, F4, \
-    F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, First, Help, Home, \
+    F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, Help, Home, \
     Insert, kp0, kp1, kp2, kp3, kp4, kp5, kp6, kp7, kp8, kp9, kpEnter, \
-    LeftAlt, Last, LeftControl, Left, LeftMeta, LeftShift, LeftSuper, \
+    LeftAlt, LeftControl, Left, LeftMeta, LeftShift, LeftSuper, \
     Menu, Mode, Numlock, Pagedown, Pageup, Pause, Power, Print, RightAlt, \
     RightControl, Return, Right, RightMeta, RightShift, RightSuper, \
-    Scrolllock, SysReq, Tab, Up, Clear = [object() for i in range(65)]
+    Scrolllock, SysReq, Tab, Up, Clear = [object() for i in range(63)]
+    # Last, First,
 
 TYPABLE = {A: 'aA', B: 'bB', C: 'cC', D: 'dD', E: 'eE', F: 'fF',
            G: 'gG', H: 'hH', I: 'iI', J: 'jJ', K: 'kK', L: 'lL',
@@ -146,8 +147,9 @@ NAMED = {Backspace: 'Backspace', Break: 'Break', Capslock: 'Capslock',
          Escape: 'Escape', Euro: 'Euro', F1: 'F1', F2: 'F2', F3: 'F3', F4: 'F4',
          F5: 'F5', F6: 'F6', F7: 'F7', F8: 'F8', F9: 'F9', F10: 'F10',
          F11: 'F11', F12: 'F12', F13: 'F13', F14: 'F14', F15: 'F15',
-         First: 'First', Help: 'Help', Home: 'Home', Insert: 'Ins',
-         LeftAlt: 'L.Alt', Last: 'Last', LeftControl: 'L.Ctrl', Left: 'Left',
+         Help: 'Help', Home: 'Home', Insert: 'Ins',
+         LeftAlt: 'L.Alt', LeftControl: 'L.Ctrl', Left: 'Left',
+         # First: 'First', Last: 'Last',
          LeftMeta: 'L.Meta', LeftShift: 'L.Shift', LeftSuper: 'L.Super',
          Menu: 'Menu', Mode: 'Mode', Numlock: 'Numlock', Pagedown: 'PgDn',
          Pageup: 'PgUp', Pause: 'Pause', Power: 'Power', Print: 'Print',
@@ -164,7 +166,7 @@ STANDARD_MAP = {pgl.K_BACKSPACE: Backspace, pgl.K_BREAK: Break,
                 pgl.K_F2: F2, pgl.K_F3: F3, pgl.K_F4: F4, pgl.K_F5: F5,
                 pgl.K_F6: F6, pgl.K_F7: F7, pgl.K_F8: F8, pgl.K_F9: F9,
                 pgl.K_F10: F10, pgl.K_F11: F11, pgl.K_F12: F12, pgl.K_F13: F13,
-                pgl.K_F14: F14, pgl.K_F15: F15, pgl.K_FIRST: First,
+                pgl.K_F14: F14, pgl.K_F15: F15, # pgl.K_FIRST: First,
                 pgl.K_HELP: Help, pgl.K_HOME: Home, pgl.K_INSERT: Insert,
                 pgl.K_KP0: kp0, pgl.K_KP1: kp1, pgl.K_KP2: kp2, pgl.K_KP3: kp3,
                 pgl.K_KP4: kp4, pgl.K_KP5: kp5, pgl.K_KP6: kp6, pgl.K_KP7: kp7,
@@ -172,7 +174,8 @@ STANDARD_MAP = {pgl.K_BACKSPACE: Backspace, pgl.K_BREAK: Break,
                 pgl.K_KP_ENTER: kpEnter, pgl.K_KP_EQUALS: kpEquals,
                 pgl.K_KP_MINUS: kpMinus, pgl.K_KP_MULTIPLY: kpAsterisk,
                 pgl.K_KP_PERIOD: kpPoint, pgl.K_KP_PLUS: kpPlus,
-                pgl.K_LALT: LeftAlt, pgl.K_LAST: Last, pgl.K_LCTRL: LeftControl,
+                pgl.K_LALT: LeftAlt, pgl.K_LCTRL: LeftControl,
+                # pgl.K_LAST: Last
                 pgl.K_LEFT: Left, pgl.K_LMETA: LeftMeta,
                 pgl.K_LSHIFT: LeftShift, pgl.K_LSUPER: LeftSuper,
                 pgl.K_MENU: Menu, pgl.K_MODE: Mode, pgl.K_NUMLOCK: Numlock,

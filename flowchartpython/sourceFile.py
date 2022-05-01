@@ -18,7 +18,17 @@
 import sys, warnings, types, copy, string, os, time, stat
 from math import pi, sin, cos, tan
 
-from py_compile import marshal, MAGIC, wr_long
+from py_compile import wr_long
+
+import marshal
+# ^ formerly: from py_compile import marshal
+
+import importlib
+MAGIC = importlib.util.MAGIC_NUMBER.hex()
+# ^ formerly: from py_compile import MAGIC
+#   - A slightly newer but deprecated as of 3.4 method is:
+#     import imp
+#     imp.get_magic().hex()
 
 # The following number identifies the format of the save file.
 fcpyMagicNumber = 3

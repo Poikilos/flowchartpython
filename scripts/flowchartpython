@@ -2,8 +2,18 @@
 # -*- coding: utf-8 -*-
 import re
 import sys
+import os
+
+scriptsPath = os.path.dirname(os.path.realpath(__file__))
+repoPath = os.path.dirname(scriptsPath)
+if os.path.isdir(os.path.join(repoPath, "flowchartpython")):
+    # Append the repo path in case the script is running within the
+    # repo:
+    sys.path.append(repoPath)
+    print("* appending repo to path: {}".format(repoPath))
+
 from flowchartpython import main
+
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
     sys.exit(main())
-    # flowchartpython.main.main()

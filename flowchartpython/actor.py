@@ -15,7 +15,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-from . import main, painter, sourceFile, keyboard
+import flowchartpython as main
+
+from flowchartpython import (
+    painter,
+    sourceFile,
+    keyboard,
+)
+
 
 import sys
 import time
